@@ -1,6 +1,6 @@
 console.log("\nWelcome to the LIRI!!!\n(Language Interpretation and Recognition Interface)\n==================================================\nCommand Options:\n==================================================\n1)'my-tweets'\nThis will show your last 20 tweets and when they were created\n\n2)'spotify-this-song' <input song name here>\nThis will show the following information about the song: Artist ,Song name, A Song Preview Link, and the Song Album.\n\n3)'movie-this' <input movie name here>\nThis will give you lots of info for a movie you select. \n\n4)'do-what-it-says'\nThis will randomly call a LIRI command for you.\n==================================================\n" )
 
-var mykeys = require("./keys.js");
+var myKeys = require("./keys.js");
 var fs = require("fs");
 var request = require('request');
 var inquirer = require("inquirer");
@@ -30,11 +30,27 @@ inquirer.prompt([
 });
 
 function twitterGrab(){
-  console.log("\nCommand funct twitterGrab was done.");
+  console.log("\nCommand funct twitterGrab was started.");
+  console.log("Con Key is: " + myKeys.twitterKeys.consumer_key);
+  var client = new twitter({
+    consumer_key: myKeys.twitterKeys.consumer_key,
+    consumer_secret: myKeys.twitterKeys.consumer_secret,
+    access_token_key: myKeys.twitterKeys.access_token_key,
+    access_token_secret: myKeys.twitterKeys.access_token_secret
+  });
+
+  client.get('favorites/list', {count: 1}, function(error, tweets, response) {
+  if(error) throw error;
+  console.log(tweets);  // The favorites.
+  var tweetInfo = JSON.stringify(tweets);
+  var tweetObj = JSON.parse(tweetInfo);
+  console.log(tweetObj["created_at"]);
+  });
+
 };
 
 function spotSong(){
-  console.log("\nCommand funct spotSong was done.");
+  console.log("\nCommand funct spotSong was started.");
 };
 
 function movieThis(){
@@ -67,5 +83,5 @@ function movieThis(){
 };
 
 function doRando(){
-  console.log("\nCommand funct doRando was done.");
+  console.log("\nCommand funct doRando was started.");
 };
