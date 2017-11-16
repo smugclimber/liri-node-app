@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/smugclimber/liri-node-app#readme",
   "dependencies": {
+    "clear": "0.0.1",
     "fs": "0.0.1-security",
     "inquirer": "^4.0.0",
     "node-spotify-api": "^1.0.7",
