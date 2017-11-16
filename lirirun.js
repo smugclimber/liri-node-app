@@ -63,13 +63,13 @@ function twitterGrab()
 function spotSong(value)
 {
   clear();
-
   function makeMusic(inquirerResponse)
   {
+
     var client = new spotify({id: myKeys.apiKeys.spotify_id, secret: myKeys.apiKeys.spotify_secret
     });
 
-    client.search({ type: 'track', query: inquirerResponse.songName, limit: 1})
+    client.search({ type: 'track', query: inquirerResponse.value, limit: 1})
     .then(function(response) {
       console.log("\nArtist(s): " + response.tracks.items[0].album.artists[0].name);
       console.log("Song name: " + response.tracks.items[0].name);
@@ -92,19 +92,27 @@ function spotSong(value)
     });
   };
 
-  console.log("Spotify song information getter thingy!");
-  console.log("=======================Default is I'll follow the sun=======================");
-  inquirer.prompt([
-    {
-      type: "input",
-      name: "songName",
-      message: "Type in a song name: ",
-      default: "I'll follow the sun"
-    }
-  ]).then(function(inquirerResponse)
-    {
-      makeMusic(inquirerResponse);
-    });
+  if(value === undefined)
+  {
+
+    console.log("Spotify song information getter thingy!");
+    console.log("=======================Default is I'll follow the sun=======================");
+    inquirer.prompt([
+      {
+        type: "input",
+        name: "value",
+        message: "Type in a song name: ",
+        default: "I'll follow the sun"
+      }
+    ]).then(function(inquirerResponse)
+      {
+        makeMusic(inquirerResponse);
+      });
+  }else{
+    console.log("=========================Your Random Action is: ==========================");
+    var inquirerResponse = value;
+    makeMusic(inquirerResponse);
+  }
 };
 
 //========================================================================
@@ -146,15 +154,21 @@ function movieThis(){
 };
 
 function doRando(){
-  console.log("\nCommand funct doRando was started.");
-  var dataArray;
-  fs.readFile("random.txt", "utf8", function(data, error) {
-    if (error) {
-      return console.log(error);
+  fs.readFile("random.txt", "utf8", function(err, data) {
+    if (err) {
+      return console.log(err);
     }
-    var dataArr = data.split(",");
-    dataArray = dataArr;
+    // Break the string down by comma separation and store the contents into the output array.
+    var output = data.split(",");
+    var cmd = output[0];
+    console.log(cmd);
+    var value = {value: output[1]};
+    if(cmd === "my-tweets"){
+      twitterGrab();
+    }else if(cmd === "spotify-this-song"){
+      spotSong(value);
+    }else if(cmd === "movie-this"){
+      movieThis();
+    }
   });
-  //console.log("dataArray: " + dataArray);
-  spotSong(dataArray);
 };
